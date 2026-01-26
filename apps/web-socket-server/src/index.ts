@@ -7,6 +7,7 @@ import { createServer } from "node:http";
 import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
 import { IpcSocketConnectOpts } from "node:net";
+import { measureMemory } from "node:vm";
 
 const app = express();
 
@@ -153,13 +154,14 @@ interface WSMessage {
   type: "join-room" | "chat";
   data: unknown;
 }
+
 wss.on("connection", (ws, req) => {
   ws.on("close", () => {
     users = users.filter((user) => user.ws && user.ws != ws);
   });
 
   ws.on("message", (rawData) => {
-    const message: WSMessage = JSON.parse(JSON.stringify(rawData));
+    const message: WSMessage = JSON.parse(String(rawData));
 
     switch (message.type) {
       case "join-room":
@@ -169,7 +171,7 @@ wss.on("connection", (ws, req) => {
         handleChatInRoom(ws, message.data);
         break;
       default:
-        console.log("error");
+        console.log("error", JSON.stringify(message));
     }
   });
 });
