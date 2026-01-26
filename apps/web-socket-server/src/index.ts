@@ -6,6 +6,7 @@ import { createServer } from "node:http";
 
 import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
+import { IpcSocketConnectOpts } from "node:net";
 
 const app = express();
 
@@ -112,56 +113,64 @@ app.post("/create-room", checkToken, (req: CustomRequest, res: Response) => {
   if (!req.token) return res.status(500).json({ message: "token not found" });
   const roomId = uuidv4();
   rooms.push({ roomId, name, token: req.token });
-  res.status(201).json({ message: "room created" });
+  res.status(201).json({ message: "room created", data: { username, name, token: req.query.token, roomId } });
 });
 
+const handleJoinRoom = (ws: WebSocket, rawData: unknown) => {
+  interface Data {
+    username: string;
+    id: string;
+    token?: string;
+    roomId?: string;
+  }
+  const data: Data = JSON.parse(JSON.stringify(rawData));
+
+  const userFound = users.find((user) => data.id == user.id);
+  if (!userFound) {
+    users.push({ ...data, ws });
+    return;
+  }
+  userFound.roomId = data.roomId;
+  userFound.ws = ws;
+  console.log("joined room: ", data.roomId);
+};
+
+const handleChatInRoom = (ws: WebSocket, rawData: unknown) => {
+  interface Data {
+    username: string;
+    roomId: string;
+    message: string;
+  }
+  const data: Data = JSON.parse(JSON.stringify(rawData));
+  users.map((user) => {
+    if (user.roomId == data.roomId) {
+      user.ws && user.ws.send(JSON.stringify({ message: data.message }));
+    }
+  });
+};
+
+interface WSMessage {
+  type: "join-room" | "chat";
+  data: unknown;
+}
 wss.on("connection", (ws, req) => {
   ws.on("close", () => {
     users = users.filter((user) => user.ws && user.ws != ws);
   });
-  ws.on("join-room", (rawData) => {
-    // Input
-    // {
-    //     username: string;
-    //     id: string;
-    //     token?: string;
-    //     roomId?: string;
-    // }
 
-    interface Input {
-      username: string;
-      id: string;
-      token?: string;
-      roomId?: string;
-    }
-    const data: Input = JSON.parse(JSON.stringify(rawData));
-
-    const userFound = users.find((user) => data.id == user.id);
-    if (!userFound) {
-      users.push({ ...data, ws });
-      return;
-    }
-    userFound.roomId = data.roomId;
-  });
   ws.on("message", (rawData) => {
-    // Input
-    // {
-    //     username: string;
-    //     roomId?: string;
-    //     message: string
-    // }
-    interface Data {
-      username: string;
-      roomId: string;
-      message: string;
-    }
+    const message: WSMessage = JSON.parse(JSON.stringify(rawData));
 
-    const data: Data = JSON.parse(JSON.stringify(rawData));
-    users.map((user) => {
-      if (user.roomId == data.roomId) {
-        user.ws && user.ws.send(JSON.stringify({ message: data.message }));
-      }
-    });
+    switch (message.type) {
+      case "join-room":
+        handleJoinRoom(ws, message.data);
+        break;
+      case "chat":
+        handleChatInRoom(ws, message.data);
+        break;
+      default:
+        console.log("error");
+    }
   });
 });
 const port = 8080;
