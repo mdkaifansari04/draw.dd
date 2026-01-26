@@ -158,10 +158,12 @@ interface WSMessage {
 wss.on("connection", (ws, req) => {
   ws.on("close", () => {
     users = users.filter((user) => user.ws && user.ws != ws);
+    console.log("user left", users);
   });
 
   ws.on("message", (rawData) => {
     const message: WSMessage = JSON.parse(String(rawData));
+    console.log("users", users);
 
     switch (message.type) {
       case "join-room":
