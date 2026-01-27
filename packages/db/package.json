@@ -4,20 +4,25 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "pnpm dlx prisma generate"
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/adapter-pg": "^7.3.0",
     "prisma": "^7.3.0",
     "prisma-client": "^0.0.0",
     "typescript": "^5.9.3"
   },
   "exports": {
-    "@repo/db": "./generated/prisma"
+    ".": "./src/index.ts"
   },
   "devDependencies": {
-    "@types/node": "^22.15.3"
+    "@types/node": "^22.15.3",
+    "@types/ws": "^8.18.1",
+    "@repo/typescript-config": "workspace:*"
   }
 }
