@@ -2,12 +2,14 @@ import { WebSocketServer, WebSocket } from "ws";
 import express from "express";
 import type { NextFunction, Request, Response } from "express";
 import cors from "cors";
-import { createServer } from "node:http";
+import { createServer, IncomingMessage } from "node:http";
+import { JWT_SECRET } from "@repo/backend-common";
 
 import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
 import { IpcSocketConnectOpts } from "node:net";
 import { measureMemory } from "node:vm";
+import { checkToken } from "./libs/utils";
 
 const wss = new WebSocketServer({ port: 8080 });
 
@@ -18,6 +20,7 @@ const handleJoinRoom = (ws: WebSocket, rawData: unknown) => {
   users.push({ username: data.username, roomId: data.roomId, ws });
   console.log("user joined", users);
 };
+
 const handleChatInRoom = (ws: WebSocket, rawData: unknown) => {
   const data: ChatData = JSON.parse(JSON.stringify(rawData));
   users.map((user) => {
@@ -27,7 +30,9 @@ const handleChatInRoom = (ws: WebSocket, rawData: unknown) => {
   });
 };
 
-wss.on("connection", (ws, req) => {
+wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
+  checkToken(ws, req);
+
   ws.on("close", () => {
     users = users.filter((user) => user.ws && user.ws != ws);
     console.log("user left", users);

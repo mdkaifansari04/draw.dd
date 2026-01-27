@@ -22,6 +22,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@repo/backend-common": "workspace:*",
     "@types/cors": "^2.8.19",
     "@types/ws": "^8.18.1",
     "cors": "^2.8.6"
