@@ -14,7 +14,34 @@ datasource db {
 }
 
 model User{
-  username String
-  password String
-  id  String @unique @default(uuid())
+  username  String
+  password  String   
+  avatar    String?
+  email     String   @unique
+  id        String   @unique @default(uuid())
+  rooms     Room[]
+  messages Message[]
+}
+
+model Room {
+  id        String   @id @default(uuid())
+  name      String
+  slug      String
+  createdAt DateTime @default(now())
+
+  userId    String
+  user      User @relation(fields: [userId], references: [id])
+  messages  Message[]
+}
+
+model Message {
+  id        Int   @unique @default(autoincrement())
+  message   String
+  createdAt DateTime @default(now())
+
+  userId    String
+  roomId    String
+
+  user      User @relation(fields: [userId], references: [id])
+  room     Room @relation(fields: [roomId], references: [id])
 }
