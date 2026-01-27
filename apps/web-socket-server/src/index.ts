@@ -42,11 +42,11 @@ let users: User[] = [
 const validTokens: string[] = ["eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjZGYwMmUzNi03MDIyLTRkYmItOWRiMy1iYzQ2YTU5OTg5NTMiLCJpYXQiOjE3Njk0NTA3OTIsImV4cCI6MTc2OTUzNzE5Mn0.K7ipdix11A86mtj5jQmFq_78kxeZnI5H_cE3cDVVypE"];
 const rooms: Room[] = [];
 
-app.get("/health", (req, res) => {
+app.get("/health", (req: Request, res: Response) => {
   res.json({ status: "ok" });
 });
 
-app.post("/signup", (req, res) => {
+app.post("/signup", (req: Request, res: Response) => {
   try {
     const { username } = req.body;
 
@@ -68,7 +68,7 @@ app.post("/signup", (req, res) => {
   }
 });
 
-app.post("/signin", (req, res) => {
+app.post("/signin", (req: Request, res: Response) => {
   try {
     const { userId } = req.body;
 
