@@ -3,26 +3,25 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate dev",
-    "db:deploy": "prisma migrate deploy"
+ "scripts": {
+    "prisma:generate": "prisma generate",
+    "build": "pnpm prisma:generate && tsup src/index.ts --format esm --dts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@prisma/adapter-pg": "^7.3.0",
+    "@prisma/client": "^7.3.0",
     "prisma": "^7.3.0",
-    "prisma-client": "^0.0.0",
     "typescript": "^5.9.3"
   },
   "exports": {
     ".": "./src/index.ts"
   },
   "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
     "@types/node": "^22.15.3",
-    "@types/ws": "^8.18.1",
-    "@repo/typescript-config": "workspace:*"
+    "@types/ws": "^8.18.1"
   }
 }

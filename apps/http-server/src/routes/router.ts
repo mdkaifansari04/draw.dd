@@ -6,6 +6,6 @@ import roomRouter from "./room.router";
 const router: Router = express.Router();
 
 router.use("/auth", authRouter);
-router.use("/room", roomRouter); // <-- Added this line
+router.use("/room", roomRouter); 
 
 export default router;

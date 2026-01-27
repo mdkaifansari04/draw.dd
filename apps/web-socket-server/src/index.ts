@@ -4,6 +4,7 @@ import type { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import { createServer, IncomingMessage } from "node:http";
 import { JWT_SECRET } from "@repo/backend-common";
+import { prisma } from "@repo/db";
 
 import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";

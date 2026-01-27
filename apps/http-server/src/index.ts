@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { prisma } from "@repo/db";
 import { v4 as uuidv4 } from "uuid";
 import router from "./routes/router";
-const app = express();
+const app = express();inde
 
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "OK" });
