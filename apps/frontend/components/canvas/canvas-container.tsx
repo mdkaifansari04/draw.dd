@@ -11,7 +11,7 @@ function CanvasContainer(props: { roomId: string }) {
   useLayoutEffect(() => {
     const ws = new WebSocket(`${WS_BACKEND_URL}?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJlMzZhNWU5My0xNTQ5LTRhZDYtYWQzYi1hODIwYjdjZTUwZDciLCJpYXQiOjE3Njk2ODI3MjMsImV4cCI6MTc3MDI4NzUyM30.pmPen0CTlFzhCcgBlU5iAphpDK3sOmJAPu9K75eg1eo`);
     ws.onopen = () => {
-      ws.send(JSON.stringify({ type: "join-room", data: JSON.stringify({ username: localStorage.getItem("username"), roomId: props.roomId }) }));
+      ws.send(JSON.stringify({ type: "join-room", data: JSON.stringify({ userId: localStorage.getItem("userId"), roomId: props.roomId }) }));
     };
     setSocket(ws);
   }, [props.roomId]);
