@@ -4,8 +4,9 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Canvas from "./canvas";
 import { WS_BACKEND_URL } from "@/config";
 import { LoaderCircle } from "lucide-react";
+import { Shape } from "@/types/type";
 
-function CanvasContainer(props: { roomId: string }) {
+function CanvasContainer(props: { roomId: string; existingShape: Shape[] }) {
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
   useLayoutEffect(() => {
@@ -18,7 +19,7 @@ function CanvasContainer(props: { roomId: string }) {
 
   if (!socket) return <LoadingScreen />;
 
-  return <Canvas socket={socket} roomId={props.roomId} />;
+  return <Canvas existingShape={props.existingShape} socket={socket} roomId={props.roomId} />;
 }
 
 function LoadingScreen() {

@@ -1,25 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import { Shape } from "@/types/type";
+import { useEffect, useRef, useState } from "react";
 
-type Shape =
-  | {
-      type: "rectangle";
-      width: number;
-      height: number;
-      startX: number;
-      startY: number;
-    }
-  | {
-      type: "circle";
-      x: number;
-      y: number;
-      radius: number;
-      startAngle: number;
-      endAngle: number;
-    };
-
-function Canvas({ roomId, socket }: { roomId: string; socket: WebSocket }) {
+function Canvas({ roomId, socket, existingShape }: { roomId: string; socket: WebSocket; existingShape: Shape[] }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [shapes, setShapes] = useState<Shape[]>([]);
+  const [shapes, setShapes] = useState<Shape[]>([...existingShape]);
   const shapesRef = useRef<Shape[]>([]);
 
   // Keep shapesRef in sync with shapes state
@@ -53,7 +37,9 @@ function Canvas({ roomId, socket }: { roomId: string; socket: WebSocket }) {
     context.fillRect(0, 0, canvas.width, canvas.height);
     context.moveTo(0, 0);
     context.strokeStyle = "white";
-    context.lineTo(200, 100);
+
+    console.log("exs", existingShape);
+    clearCanvas(context, canvas, shapesRef.current);
 
     let clicked = false;
     let height = 0;
@@ -102,6 +88,8 @@ function Canvas({ roomId, socket }: { roomId: string; socket: WebSocket }) {
           }),
         }),
       );
+      width = 0;
+      height = 0;
       console.log("shapes ", [...shapesRef.current, newShape]);
     };
 

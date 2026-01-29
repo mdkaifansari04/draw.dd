@@ -1,20 +1,19 @@
 import { Request, Response } from "express";
 import { prisma } from "@repo/db";
 
-export function getMessages(req: Request, res: Response) {
+export async function getMessages(req: Request, res: Response) {
   try {
     const roomId: string = req.params.roomId as string;
+    console.log("rome", roomId);
 
-    const messages = prisma.message.findMany({
+    const messages = await prisma.message.findMany({
       where: {
         roomId: roomId,
       },
     });
-    if (!messages) {
-      return res.status(404).json({ message: "No messages found" });
-    }
+    console.log("message", messages);
 
-    res.status(200).json({ messages });
+    res.status(200).json({ data: messages });
   } catch (error) {
     console.log("Internal server error:", error);
   }

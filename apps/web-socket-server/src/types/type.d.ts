@@ -15,3 +15,4 @@ interface WSMessage {
   type: "join-room" | "chat";
   data: unknown;
 }
+
