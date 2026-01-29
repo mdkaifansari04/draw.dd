@@ -11,4 +11,3 @@ router.use("/room", roomRouter);
 router.use("/chats", chatRouter);
 
 export default router;
-w

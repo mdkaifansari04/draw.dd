@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express from "express";
 import type { Request, Response } from "express";
 import jwt from "jsonwebtoken";
@@ -14,6 +15,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/", router);
 
-app.listen(8000, () => {
-  console.log("APP is running on 8000");
+app.listen(8001, () => {
+  console.log("APP is running on 8001");
 });

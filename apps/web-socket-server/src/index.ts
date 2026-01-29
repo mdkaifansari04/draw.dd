@@ -17,8 +17,8 @@ const wss = new WebSocketServer({ port: 8080 });
 let users: { username: string; roomId: string; ws: WebSocket }[] = [];
 
 const handleJoinRoom = (ws: WebSocket, rawData: unknown) => {
-  const data: JoinRoomData = JSON.parse(JSON.stringify(rawData));
-  users.push({ username: data.username, roomId: data.roomId, ws });
+  const data: JoinRoomData = JSON.parse(String(rawData)) as JoinRoomData;
+  users.push({ username: data["username"], roomId: data["roomId"], ws });
   console.log("user joined", users);
 };
 
@@ -48,7 +48,7 @@ wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
         handleJoinRoom(ws, message.data);
         break;
       case "chat":
-        handleChatInRoom(ws, message.data);
+        handleChatInRoom(ws, JSON.stringify(message.data));
         break;
       default:
         console.log("error", JSON.stringify(message));

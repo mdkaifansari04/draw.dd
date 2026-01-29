@@ -5,6 +5,6 @@ import { verifyUser } from "../middleware";
 const router: Router = express.Router();
 
 router.post("/", verifyUser, createRoom);
-router.get("/:slug", verifyUser, getRoomBySlug);
+router.get("/:slug", getRoomBySlug);
 
 export default router;

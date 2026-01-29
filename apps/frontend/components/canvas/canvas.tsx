@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-"use client";
 import React, { useEffect, useRef, useState } from "react";
 
 type Shape = {
@@ -10,11 +8,7 @@ type Shape = {
   startY: number;
 };
 
-function drawRectangle(context: CanvasRenderingContext2D, startX: number, startY: number, width: number, height: number) {
-  context.strokeRect(startX, startY, width, height);
-}
-
-function Page() {
+function Canvas(props: { roomId: string; socket: WebSocket }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [shapes, setShapes] = useState<Shape[]>([]);
 
@@ -86,4 +80,8 @@ function clearCanvas(context: CanvasRenderingContext2D, canvas: HTMLCanvasElemen
     }
   });
 }
-export default Page;
+
+function drawRectangle(context: CanvasRenderingContext2D, startX: number, startY: number, width: number, height: number) {
+  context.strokeRect(startX, startY, width, height);
+}
+export default Canvas;
