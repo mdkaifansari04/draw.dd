@@ -24,8 +24,8 @@ model User{
 
 model Room {
   id        String   @id @default(uuid())
-  name      String
-  slug      String
+  name      String    @unique
+  slug      String    @unique
   createdAt DateTime @default(now())
 
   userId    String
@@ -40,7 +40,6 @@ model Message {
 
   userId    String
   roomId    String
-
   user      User @relation(fields: [userId], references: [id])
   room     Room @relation(fields: [roomId], references: [id])
 }
