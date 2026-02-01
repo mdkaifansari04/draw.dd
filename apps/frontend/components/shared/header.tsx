@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 
@@ -7,12 +8,16 @@ function Header() {
   if (pathname.includes("canvas")) return null;
 
   return (
-    <nav>
-      <div className="flex items-center justify-between p-4 border-b">
-        <h1 className="text-2xl font-bold">Draw.dd</h1>
-        <div>
-          <button className="mr-4 px-4 py-2 bg-blue-500 text-white rounded">Sign In</button>
-          <button className="px-4 py-2 bg-green-500 text-white rounded">Sign Up</button>
+    <nav className="border-b border-gray-200">
+      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="text-xl font-semibold text-gray-900">draw.dd</div>
+        <div className="flex items-center gap-6">
+          <Link href="/signin" className="text-sm text-gray-600 hover:text-gray-900">
+            Sign in
+          </Link>
+          <Link href="/signup" className="text-sm bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-800">
+            Sign up
+          </Link>
         </div>
       </div>
     </nav>
